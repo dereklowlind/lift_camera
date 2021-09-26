@@ -1,7 +1,6 @@
-// import logo from './logo.svg';
 import './App.css';
 import Webcam from "react-webcam";
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 function App() {
   const webcamRef = useRef(null);
@@ -14,9 +13,7 @@ function App() {
     setCapturing(true);
     setVideoBlob(null);
     setRecordedChunks([]);
-    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
-      mimeType: "video/webm"
-    });
+    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream);
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
       handleDataAvailable
@@ -45,27 +42,27 @@ function App() {
   }, [mediaRecorderRef, webcamRef, setCapturing]);
 
 
-  const handleDownload = useCallback(() => {
-    if (recordedChunks.length) {
-      const blob = new Blob(recordedChunks, {
-        type: "video/webm"
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display: none";
-      a.href = url;
-      a.download = "react-webcam-stream-capture.webm";
-      a.click();
-      window.URL.revokeObjectURL(url);
-      setRecordedChunks([]);
-    }
-  }, [recordedChunks]);
+  // const handleDownload = useCallback(() => {
+  //   if (recordedChunks.length) {
+  //     const blob = new Blob(recordedChunks, {
+  //       type: "video/webm"
+  //     });
+  //     const url = URL.createObjectURL(blob);
+  //     const a = document.createElement("a");
+  //     document.body.appendChild(a);
+  //     a.style = "display: none";
+  //     a.href = url;
+  //     a.download = "react-webcam-stream-capture.webm";
+  //     a.click();
+  //     window.URL.revokeObjectURL(url);
+  //     setRecordedChunks([]);
+  //   }
+  // }, [recordedChunks]);
 
   const video = (videoBlob ? 
     (
-      <video controls autoPlay>
-          <source src={videoBlob} type="video/webm"/>
+      <video controls autoPlay muted playsInline>
+          <source src={videoBlob}/>
         </video>
     ) : (<div></div>)
   );
