@@ -10,20 +10,6 @@ function App() {
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoBlob, setVideoBlob] = useState(null);
 
-  // useEffect(() => {
-  //   mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
-  //     mimeType: "video/webm"
-  //   });
-  //   mediaRecorderRef.current.addEventListener(
-  //     "dataavailable",
-  //     handleDataAvailable
-  //   );
-  //   mediaRecorderRef.current.addEventListener(
-  //     "stop",
-  //     handleOnStop
-  //   );
-  // }, []);
-
   const handleStartCaptureClick = useCallback(() => {
     setCapturing(true);
     setVideoBlob(null);
@@ -35,10 +21,6 @@ function App() {
       "dataavailable",
       handleDataAvailable
     );
-    // mediaRecorderRef.current.addEventListener(
-    //   "stop",
-    //   handleOnStop
-    // );
     mediaRecorderRef.current.start();
   }, [webcamRef, setCapturing, mediaRecorderRef]);
 
@@ -48,9 +30,6 @@ function App() {
         setRecordedChunks((prev) => prev.concat(data));
         console.log("chunk");
         console.log(data);
-        // const blob = new Blob(recordedChunks, {
-        //   type: "video/webm"
-        // });
         const url = URL.createObjectURL(data);
         setVideoBlob(url);
         console.log(url);
@@ -65,44 +44,6 @@ function App() {
     
   }, [mediaRecorderRef, webcamRef, setCapturing]);
 
-
-  // const handleOnStop = useCallback(() => {
-  //   console.log("data available after MediaRecorder.stop() called.");
-  //   console.log(recordedChunks);
-  //   // if (recordedChunks.length) {
-  //   //   const blob = new Blob(recordedChunks, {
-  //   //     type: "video/webm"
-  //   //   });
-  //   //   const url = URL.createObjectURL(blob);
-  //   //   setVideoBlob(url);
-  //   //   console.log(url);
-  //   // }
-  // }, [recordedChunks, setVideoBlob]);
-
-  // const handleConvertVideo = (() => {
-  //   console.log("convert video");
-  //   console.log(recordedChunks);
-  //   if (recordedChunks.length) {
-  //     const blob = new Blob(recordedChunks, {
-  //       type: "video/webm"
-  //     });
-  //     const url = URL.createObjectURL(blob);
-  //     setVideoBlob(url);
-  //     console.log(url);
-  //   }
-  // });
-
-  // const convertVideo = (() => {
-  //   console.log("convert video");
-  //   console.log(recordedChunks);
-  //   if (recordedChunks.length) {
-  //     const blob = new Blob(recordedChunks, {
-  //       type: "video/webm"
-  //     });
-  //     const url = URL.createObjectURL(blob);
-  //     return url;
-  //   }
-  // });
 
   const handleDownload = useCallback(() => {
     if (recordedChunks.length) {
@@ -137,17 +78,7 @@ function App() {
       ) : (
         <button onClick={handleStartCaptureClick}>Start Capture</button>
       )}
-      {/* <button onClick={handleConvertVideo}>Convert Video</button> */}
-      {/* {videoBlob && (
-        <video controls>
-          <source src={videoBlob} type="video/webm"/>
-        </video>
-      )} */}
       {video}
-
-{/* {recordedChunks.length > 0 && (
-        <button onClick={handleDownload}>Download</button>
-      )} */}
     </div>
   );
 }
