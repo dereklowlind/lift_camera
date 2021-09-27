@@ -1,18 +1,19 @@
 import './App.css';
 import Webcam from "react-webcam";
 import { useCallback, useRef, useState } from 'react';
+import { Button } from '@material-ui/core';
 
 function App() {
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
-  const [recordedChunks, setRecordedChunks] = useState([]);
+  // const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoBlob, setVideoBlob] = useState(null);
 
   const handleStartCaptureClick = useCallback(() => {
     setCapturing(true);
     setVideoBlob(null);
-    setRecordedChunks([]);
+    // setRecordedChunks([]);
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream);
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
@@ -24,15 +25,15 @@ function App() {
   const handleDataAvailable = useCallback(
     ({ data }) => {
       if (data.size > 0) {
-        setRecordedChunks((prev) => prev.concat(data));
+        // setRecordedChunks((prev) => prev.concat(data));
         console.log("chunk");
         console.log(data);
         const url = URL.createObjectURL(data);
         setVideoBlob(url);
         console.log(url);
       }
-    },
-    [setRecordedChunks]
+    }, []
+    [setVideoBlob]
   );
 
   const handleStopCaptureClick = useCallback(() => {
@@ -61,7 +62,7 @@ function App() {
 
   const video = (videoBlob ? 
     (
-      <video controls autoPlay muted playsInline>
+      <video controls autoPlay muted playsInline width={'100%'} height={'100%'}>
           <source src={videoBlob}/>
         </video>
     ) : (<div></div>)
@@ -69,11 +70,16 @@ function App() {
 
   return (
     <div className="App">
-      <Webcam audio={false} ref={webcamRef} mirrored={true} />
+      <Webcam width={'100%'} height={'100%'} audio={false} ref={webcamRef} mirrored={true} />
       {capturing ? (
-        <button onClick={handleStopCaptureClick}>Stop Capture</button>
+        <Button variant="contained" onClick={handleStopCaptureClick}>
+          stop
+        </Button>
       ) : (
-        <button onClick={handleStartCaptureClick}>Start Capture</button>
+        <Button variant="contained" color="primary" onClick={handleStartCaptureClick}>
+          start
+        </Button>
+        
       )}
       {video}
     </div>
