@@ -2,18 +2,30 @@ import './App.css';
 import Webcam from "react-webcam";
 import { useCallback, useRef, useState } from 'react';
 import { Button } from '@material-ui/core';
+import Countdown, { zeroPad } from 'react-countdown';
+import useSound from 'use-sound';
+import timerEndBeep from './mixkit-alert-bells-echo-765.wav';
 
 function App() {
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
+  const countDownRef = useRef(null);
   const [capturing, setCapturing] = useState(false);
   // const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoBlob, setVideoBlob] = useState(null);
+  const [ resetKey, setResetKey ] = useState(0);
+
+  const [playTimerEndBeep] = useSound(timerEndBeep);
+
+
 
   const handleStartCaptureClick = useCallback(() => {
     setCapturing(true);
     setVideoBlob(null);
     // setRecordedChunks([]);
+    const resetKeyCand = resetKey ? 0 : 1; // toggle between 0 and 1
+    setResetKey(resetKeyCand);
+    countDownRef.current.stop();
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream);
     mediaRecorderRef.current.addEventListener(
       "dataavailable",
@@ -21,6 +33,7 @@ function App() {
     );
     mediaRecorderRef.current.start();
   }, [webcamRef, setCapturing, mediaRecorderRef]);
+
 
   const handleDataAvailable = useCallback(
     ({ data }) => {
@@ -40,6 +53,7 @@ function App() {
     mediaRecorderRef.current.stop();
     setCapturing(false);
     
+    countDownRef.current.start();
   }, [mediaRecorderRef, webcamRef, setCapturing]);
 
 
@@ -59,6 +73,23 @@ function App() {
   //     setRecordedChunks([]);
   //   }
   // }, [recordedChunks]);
+
+
+
+  // Renderer callback with condition
+  const renderer = ({ minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a complete state
+      return <span>Done!</span>;
+    } else {
+      // Render a countdown
+      return (
+        <span>
+          {zeroPad(minutes)}:{zeroPad(seconds)}
+        </span>
+      );
+    }
+  };
 
   const video = (videoBlob ? 
     (
@@ -81,6 +112,15 @@ function App() {
         </Button>
         
       )}
+        <Countdown
+          ref={countDownRef}
+          autoStart={false}
+          date={Date.now() + 5000}
+          renderer={renderer}
+          key={resetKey}
+          onComplete={playTimerEndBeep}
+        />
+        <button onClick={playTimerEndBeep}>beep</button>
       {video}
     </div>
   );
