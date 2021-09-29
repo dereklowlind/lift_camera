@@ -1,7 +1,8 @@
 import './App.css';
 import Webcam from "react-webcam";
 import { useCallback, useRef, useState } from 'react';
-import { Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
+// import { TimePicker } from '@material-ui/lab';
 import Countdown, { zeroPad } from 'react-countdown';
 import useSound from 'use-sound';
 import timerEndBeep from './mixkit-alert-bells-echo-765.wav';
@@ -13,7 +14,8 @@ function App() {
   const [capturing, setCapturing] = useState(false);
   // const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoBlob, setVideoBlob] = useState(null);
-  const [ resetKey, setResetKey ] = useState(0);
+  const [resetKey, setResetKey] = useState(0);
+  const [ countDownLegth, setCountDownLength ] = useState(0)
 
   const [playTimerEndBeep] = useSound(timerEndBeep);
 
@@ -115,12 +117,25 @@ function App() {
         <Countdown
           ref={countDownRef}
           autoStart={false}
-          date={Date.now() + 5000}
+          date={Date.now() + 120000}
           renderer={renderer}
           key={resetKey}
           onComplete={playTimerEndBeep}
         />
-        <button onClick={playTimerEndBeep}>beep</button>
+        {/* <button onClick={playTimerEndBeep}>beep</button> */}
+        {/* <TimePicker 
+          ampmInClock
+          views={['minutes', 'seconds']}
+          inputFormat="mm:ss"
+          mask="__:__"
+          label="Minutes and seconds"
+          value={countDownLegth}
+          onChange={(newValue) => {
+            setCountDownLength(newValue);
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        {countDownLegth} */}
       {video}
     </div>
   );
