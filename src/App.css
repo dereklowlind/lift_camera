@@ -1,3 +1,24 @@
 .App {
   text-align: center;
 }
+
+.startStopButton {
+  width: 200px;
+  height: 200px;
+  color: white;
+  font-size: 60px;
+  text-align: center; 
+  margin: auto;
+}
+
+.stopButton {
+  background: grey;
+}
+
+.startButton {
+  background: blue;
+}
+
+.countDown {
+  font-size: 60px;
+}

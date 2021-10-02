@@ -1,7 +1,7 @@
 import './App.css';
 import Webcam from "react-webcam";
 import { useCallback, useRef, useState } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 // import { TimePicker } from '@material-ui/lab';
 import Countdown, { zeroPad } from 'react-countdown';
 import useSound from 'use-sound';
@@ -15,7 +15,7 @@ function App() {
   // const [recordedChunks, setRecordedChunks] = useState([]);
   const [videoBlob, setVideoBlob] = useState(null);
   const [resetKey, setResetKey] = useState(0);
-  const [ countDownLegth, setCountDownLength ] = useState(0)
+  // const [ countDownLegth, setCountDownLength ] = useState(0)
 
   const [playTimerEndBeep] = useSound(timerEndBeep);
 
@@ -82,11 +82,11 @@ function App() {
   const renderer = ({ minutes, seconds, completed }) => {
     if (completed) {
       // Render a complete state
-      return <span>Done!</span>;
+      return <span className="countDown">Done!</span>;
     } else {
       // Render a countdown
       return (
-        <span>
+        <span className="countDown">
           {zeroPad(minutes)}:{zeroPad(seconds)}
         </span>
       );
@@ -105,13 +105,13 @@ function App() {
     <div className="App">
       <Webcam width={'100%'} height={'100%'} audio={false} ref={webcamRef} mirrored={true} />
       {capturing ? (
-        <Button variant="contained" onClick={handleStopCaptureClick}>
+        <button className="startStopButton stopButton" onClick={handleStopCaptureClick}>
           stop
-        </Button>
+        </button>
       ) : (
-        <Button variant="contained" color="primary" onClick={handleStartCaptureClick}>
+        <button className="startStopButton startButton" color="primary" onClick={handleStartCaptureClick}>
           start
-        </Button>
+        </button>
         
       )}
         <Countdown
@@ -121,6 +121,7 @@ function App() {
           renderer={renderer}
           key={resetKey}
           onComplete={playTimerEndBeep}
+          
         />
         {/* <button onClick={playTimerEndBeep}>beep</button> */}
         {/* <TimePicker 
